@@ -1,0 +1,4 @@
+venv
+.pyc
+secrets.json
+db.sqlite3

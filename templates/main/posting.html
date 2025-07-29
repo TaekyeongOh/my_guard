@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Posting</title>
+</head>
+
+<body>
+  <h2>{{post.postname}}</h2>
+  <b>작성자 닉네임 :</b> {{nickname}} <br>
+  <b>위치:</b> {{ post.location }}<br>
+  <b>거리 선택:</b> {{ post.distance }}<br>
+  <b>안전도:</b> {{ post.safety_level }}<br>
+  <p>{{post.contents}}</p>
+  <p>조회수: {{ post.view_count }}</p>
+
+  <!-- 사진 영역 -->
+  {% if post.mainphoto %}
+  <img src="{{post.mainphoto.url}}" alt="" width="300">
+  <br>
+  {% endif %}
+
+  <hr>
+
+  <!-- 좋아요 영역 -->
+  <form action="{% url 'main:like_post' post.pk %}" method="POST">
+    {% csrf_token %}
+    {% if user in post.like_users.all %}
+    <button type="submit">❤️ 좋아요 취소</button>
+    {% else %}
+    <button type="submit">🤍 좋아요</button>
+    {% endif %}
+    <span>{{ post.like_users.count }}명 좋아요</span>
+  </form>
+  <hr>
+  <br>
+  <a href="/blog/">목록</a>
+  <a href="/blog/{{post.pk}}/remove">삭제</a>
+  <hr>
+
+
+  <!-- 댓글 작성 폼 -->
+  {% if user.is_authenticated %}
+  <form action="{% url 'main:comments_create' post.pk %}" method="POST">
+    {% csrf_token %}
+    {{ comment_form }}
+    <input type="submit" value="댓글 작성">
+  </form>
+  {% else %}
+  <a href="/user/login/">[댓글을 작성하려면 로그인하세요.]</a>
+  {% endif %}
+
+  <hr>
+  <h3>댓글 목록</h3>
+
+  <!-- 댓글 개수 표시 -->
+  {% if comments %}
+  <p><b>{{ comments|length }}개의 댓글이 있습니다.</b></p>
+  {% endif %}
+
+  <hr>
+  <!-- 댓글 좋아요 버튼 템플릿에 추가하기 -->
+  <ul>
+    {% for comment in comments %}
+    {% if not comment.parent %}
+    <li>
+      {{ comment.author.nickname }} - {{ comment.content }}
+      <small>(작성 시간: {{ comment.created_at|date:"Y년 m월 d일 H:i" }})</small>
+
+      <!-- 좋아요 버튼 -->
+      <form action="{% url 'main:like_comment' comment.pk %}" method="POST">
+        {% csrf_token %}
+        {% if user in comment.like_users.all %}
+        <button type="submit">❤️</button>
+        {% else %}
+        <button type="submit">🤍</button>
+        {% endif %}
+        {{ comment.like_users.count }}
+      </form>
+
+      <!-- 대댓글 목록 -->
+      <ul>
+        {% for reply in comment.replies.all %}
+        <li>
+          ↳ {{ reply.author.nickname }} - {{ reply.content }}
+          <small>(작성 시간: {{ comment.created_at|date:"Y년 m월 d일 H:i" }})</small>
+          <!-- 대댓글 좋아요 -->
+          <form action="{% url 'main:like_comment' reply.pk %}" method="POST">
+            {% csrf_token %}
+            {% if user in reply.like_users.all %}
+            <button type="submit">❤️</button>
+            {% else %}
+            <button type="submit">🤍</button>
+            {% endif %}
+            {{ reply.like_users.count }}
+          </form>
+        </li>
+        {% endfor %}
+      </ul>
+
+      <!-- 대댓글 작성 폼 -->
+      <form action="{% url 'main:comments_create' post.pk %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="parent_id" value="{{ comment.pk }}">
+        {{ comment_form }}
+        <button type="submit">답글 작성</button>
+      </form>
+    </li>
+    {% endif %}
+    {% endfor %}
+  </ul>
+  <!-- 댓글 좋아요 버튼 템플릿에 추가하기 코드 끝-->
+
+</body>
+
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+</head>
+
+<body>
+    <h2>로그인</h2>
+    <form method="post" id="login-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">로그인</button>
+    </form>
+
+    <a href="{% url 'signup' %}">회원가입 하러 가기</a>
+
+    <form action="{% url 'password_search' %}" method="get" style="margin-top: 10px;">
+        <button type="submit">비밀번호 찾기</button>
+    </form>
+
+    <form action="{% url 'password_email' %}" method="get" style="margin-top: 10px;">
+        <button type="submit">비밀번호 이메일로 찾기 및 변경</button>
+    </form>
+
+    {% if messages %}
+    {% for message in messages %}
+    <script>alert("{{ message }}");</script>
+    {% endfor %}
+    {% endif %}
+</body>
+
+<script>
+    // 로그인 후 반환된 JSON 응답을 처리하는 예시
+    function handleLoginResponse(response) {
+        if (response.is_authenticated) {
+            // 로컬 스토리지에 사용자 정보 저장
+            localStorage.setItem('user_id', response.id);
+            localStorage.setItem('username', response.username);
+            localStorage.setItem('nickname', response.nickname);
+            console.log('로그인 성공, 사용자 정보 저장');
+            window.location.href='/';
+        } else {
+            alert('로그인 실패');
+        }
+    }
+
+    // 로그인 폼 제출 시 요청 보내기
+    document.getElementById('login-form').addEventListener('submit', function (event) {
+        // 기본 폼 제출 동작을 막고
+        event.preventDefault();
+        const formData = new FormData(this);
+
+        fetch('/user/login/', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(handleLoginResponse);
+    });
+</script>
+
+</html>

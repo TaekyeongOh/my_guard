@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Board List</title>
+</head>
+
+<body>
+    <h1>게시판 페이지</h1>
+
+    <form method="get" action="{% url 'main:blog' %}">
+        <input type="text" name="search" placeholder="검색" value="{{search_query}}">
+        <select name="sort">
+            <option value="recent" {% if sort == 'recent' %}selected{% endif %}>최신순</option>
+            <option value="popular" {% if sort == 'popular' %}selected{% endif %}>인기순</option>
+        </select>
+        <button type="submit">검색</button>
+    </form>
+
+    <table>
+        {% for list in postlist %}
+        <ul>
+            <li>
+                <a href="{{list.pk}}/">{{list.postname}}</a>
+                <p>조회수: {{ list.view_count }}</p>
+            </li>
+        </ul>
+        {% endfor %}
+    </table>
+
+    <button><a href="new_post/">글쓰기</a></button>
+</body>
+
+</html>

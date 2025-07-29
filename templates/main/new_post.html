@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>글쓰기 페이지</title>
+</head>
+
+<body>
+    <h1>글쓰기 페이지</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        제목 <br>
+        <input type="text" name="postname"><br>
+
+        작성자 닉네임 : {{nickname}} <br>
+
+        지역 위치<br>
+        <input type="text" name="location" placeholder="예: 서울시 강남구 삼성동"><br>
+
+        거리<br>
+        <select name="distance">
+            <option value="10m">10m</option>
+            <option value="50m">50m</option>
+            <option value="100m">100m</option>
+        </select><br>
+
+        안전도<br>
+        <select name="safety_level">
+            <option value="high">상</option>
+            <option value="medium">중</option>
+            <option value="low">하</option>
+        </select><br><br>
+
+        내용<br>
+        <textarea rows="10" cols="50" name="contents"></textarea><br>
+        <input type="file" name="mainphoto"><br>
+        <input type="submit" value="글쓰기">
+    </form>
+</body>
+
+</html>
