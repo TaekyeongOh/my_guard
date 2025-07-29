@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate,login, logout
 from django.contrib import messages
 from django.http import JsonResponse
 from .forms import SignUpForm, LoginForm, EmergencyContactFormSet
@@ -63,13 +63,11 @@ def login_view(request):
 #비밀번호 찾기 기능(아이디를 입력하면 그에 해당하는 유저의 비밀번호를 반환해주는 형식)
 def password_search(request):
     if request.method == 'POST':
-        user_id = request.POST.get('id')  # 폼에서 입력한 id 값을 user_id 변수에 저장
+        user_id = request.POST.get('id') 
         found_password=""
 
         try:
-            # CustomUser 테이블에 해당 ID가 있는지 확인
             exist_user = CustomUser.objects.get(id=user_id)
-            #해당 유저의 비밀번호를 불러옴
             found_password=exist_user.raw_password
         except CustomUser.DoesNotExist:
             messages.error(request, '해당 아이디를 가진 유저가 없습니다.')
@@ -88,21 +86,41 @@ def manage_emergency_contacts_view(request):
         if formset.is_valid():
             instances = formset.save(commit=False)
             for instance in instances:
-                # 새로운 인스턴스에만 user_id를 할당합니다.
-                # 기존 인스턴스는 이미 user_id를 가지고 있습니다.
-                if not instance.pk: # pk가 없으면 새로운 인스턴스입니다.
+                if not instance.pk: 
                     instance.user_id = request.user
-                instance.save() # 인스턴스 저장
+                instance.save()
 
             # 삭제된 폼 처리 (can_delete=True일 때 필요)
             for obj in formset.deleted_objects:
                 obj.delete()
 
             messages.success(request, "긴급 연락처가 성공적으로 저장되었습니다.")
-            return redirect('/') # 저장 후 메인 페이지로 리다이렉트 (URL 이름 확인)
+            return redirect('/')
         else:
             messages.error(request, '긴급 연락처 저장에 실패했습니다. 입력 양식을 확인해주세요.')
     else:
         formset = EmergencyContactFormSet(queryset=queryset)
 
     return render(request, 'user/emergency_contacts.html', {'formset': formset})
+
+# mypage
+@login_required
+def mypage(request):
+    return render(request, 'user/mypage.html')
+
+# logout
+@login_required
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+
+# 회원탈퇴
+@login_required
+def withdraw_view(request):
+    if request.method == 'POST':
+        user = request.user
+        user.delete()
+        logout(request)
+        return redirect('login')
+    else:
+        return render(request, 'user/withdraw_confirm.html')

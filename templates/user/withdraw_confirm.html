@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원탈퇴</title>
+</head>
+
+<body>
+    <h2>회원 탈퇴 확인</h2>
+    <p>정말 회원 탈퇴를 하시겠습니까? 되돌릴 수 없습니다.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">탈퇴하기</button>
+        <a href="{% url 'mypage' %}">취소</a>
+    </form>
+
+</body>
+
+</html>
