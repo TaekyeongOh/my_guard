@@ -36,6 +36,12 @@ def get_secret(setting, secrets=secrets):
 
 SECRET_KEY = get_secret("SECRET_KEY")
 
+# Naver Map API
+# NAVER_MAPS_CLIENT_ID = get_secret("NAVER_MAPS_CLIENT_ID")
+
+#KAKAO Map API
+KAKAO_MAPS_APP_KEY=get_secret("KAKAO_MAPS_APP_KEY")
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -54,6 +60,7 @@ INSTALLED_APPS = [
 
     'user',
     'main',
+    'map',
 ]
 
 MIDDLEWARE = [
