@@ -18,7 +18,7 @@ def signup_view(request):
             user= CustomUser.objects.get(id=user_id)
             user.raw_password=request.POST.get('password1')
             user.save()
-            return redirect('user/signup') 
+            return redirect('/user/login/') 
     else:
         form = SignUpForm()
     return render(request, 'user/signup.html', {'form': form})
