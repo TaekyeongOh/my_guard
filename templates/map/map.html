@@ -1,51 +1,86 @@
-<!-- api key 연결 -->
-<!-- <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{kakao_maps_app_key}}"></script> -->
-
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>마커 클러스터러</title>
-    
-    <!-- jQuery 먼저 로드 -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta charset="utf-8" />
+    <title>마커 클러스터러 - 현재 위치 기반</title>
+
+    <!-- jQuery 로드 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
+
+    <style>
+        #map { width: 100%; height: 500px; }
+        p.link { margin-top: -12px; }
+    </style>
 </head>
 <body>
-<p style="margin-top:-12px">
-    사용한 데이터를 보시려면 
-    <em class="link">
-       <a href='/static/map/chicken.json' target="_blank">여기를 클릭하세요!</a>
-    </em>
-</p>
-<div id="map" style="width:100%;height:350px;"></div>
+    <div id="map"></div>
 
-<!-- 카카오 SDK + 클러스터러 라이브러리 -->
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{ kakao_maps_app_key }}&libraries=clusterer"></script>
+    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{kakao_maps_app_key}}&libraries=clusterer"></script>
 
-{% load static %}
+    <script>
+        let map;
+        let clusterer;
 
-<script>
-    var map = new kakao.maps.Map(document.getElementById('map'), {
-        center : new kakao.maps.LatLng(36.2683, 127.6358),
-        level : 14
-    });
+        function initMapWithCurrentLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    
+                    createMap(new kakao.maps.LatLng(lat, lng));
+                }, error => {
+                    console.warn("현재 위치를 가져올 수 없어 기본 위치로 지도 초기화");
+                    createMap(new kakao.maps.LatLng(36.2683, 127.6358));
+                });
+            } else {
+                createMap(new kakao.maps.LatLng(36.2683, 127.6358));
+            }
+        }
 
-    var clusterer = new kakao.maps.MarkerClusterer({
-        map: map,
-        averageCenter: true,
-        minLevel: 10
-    });
-
-    // jQuery 사용 (정상 작동해야 함)
-    $.get('/static/map/chicken.json', function(data) {
-        var markers = $(data.positions).map(function(i, position) {
-            return new kakao.maps.Marker({
-                position : new kakao.maps.LatLng(position.lat, position.lng)
+        function createMap(centerLatLng) {
+            map = new kakao.maps.Map(document.getElementById('map'), {
+                center: centerLatLng,
+                level: 10
             });
-        });
 
-        clusterer.addMarkers(markers);
-    });
-</script>
+            clusterer = new kakao.maps.MarkerClusterer({
+                map: map,
+                averageCenter: true,
+                minLevel: 10,
+            });
+
+            loadMarkers();
+        }
+
+        // JSON에서 마커 불러오기 및 마커와 infoWindow 연결
+        function loadMarkers() {
+            $.get('/static/map/police_positions.json', function (data) {
+                const markers = [];
+
+                data.positions.forEach(pos => {
+                    const marker = new kakao.maps.Marker({
+                        position: new kakao.maps.LatLng(pos.lat, pos.lng)
+                    });
+
+                    const infowindow = new kakao.maps.InfoWindow({
+                        content: `<div style="padding:5px;font-size:14px;">${pos.name}</div>`
+                    });
+
+                    kakao.maps.event.addListener(marker, 'click', function () {
+                        infowindow.open(map, marker);
+                    });
+
+                    markers.push(marker);
+                });
+
+                clusterer.addMarkers(markers);
+            });
+        }
+
+        // 페이지 로딩 시 실행
+        window.onload = function () {
+            initMapWithCurrentLocation();
+        };
+    </script>
 </body>
 </html>
