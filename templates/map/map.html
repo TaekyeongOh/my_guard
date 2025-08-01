@@ -1,21 +1,51 @@
+<!-- api key 연결 -->
+<!-- <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{kakao_maps_app_key}}"></script> -->
+
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8"/>
-	<title>Kakao 지도</title>
+    <meta charset="utf-8">
+    <title>마커 클러스터러</title>
+    
+    <!-- jQuery 먼저 로드 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    
-	<div id="map" style="width:500px;height:400px;"></div>
-	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{kakao_maps_app_key}}"></script>
-	<script>
-		var container = document.getElementById('map');
-		var options = {
-			center: new kakao.maps.LatLng(33.450701, 126.570667),
-			level: 3
-		};
+<p style="margin-top:-12px">
+    사용한 데이터를 보시려면 
+    <em class="link">
+       <a href='/static/map/chicken.json' target="_blank">여기를 클릭하세요!</a>
+    </em>
+</p>
+<div id="map" style="width:100%;height:350px;"></div>
 
-		var map = new kakao.maps.Map(container, options);
-	</script>
+<!-- 카카오 SDK + 클러스터러 라이브러리 -->
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{ kakao_maps_app_key }}&libraries=clusterer"></script>
+
+{% load static %}
+
+<script>
+    var map = new kakao.maps.Map(document.getElementById('map'), {
+        center : new kakao.maps.LatLng(36.2683, 127.6358),
+        level : 14
+    });
+
+    var clusterer = new kakao.maps.MarkerClusterer({
+        map: map,
+        averageCenter: true,
+        minLevel: 10
+    });
+
+    // jQuery 사용 (정상 작동해야 함)
+    $.get('/static/map/chicken.json', function(data) {
+        var markers = $(data.positions).map(function(i, position) {
+            return new kakao.maps.Marker({
+                position : new kakao.maps.LatLng(position.lat, position.lng)
+            });
+        });
+
+        clusterer.addMarkers(markers);
+    });
+</script>
 </body>
 </html>
