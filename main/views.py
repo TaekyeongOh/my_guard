@@ -3,17 +3,11 @@ from django.views.decorators.http import require_POST
 from user.models import CustomUser
 from .models import Post, Comment
 from .forms import CommentForm
-from django.db.models import Q, Count
+from django.db.models import Q, Count, When, IntegerField, Case
 
 # index.html 페이지를 부르는 index 함수
 def index(request):
     return render(request, 'main/index.html')
-
-# blog.html 페이지를 부르는 blog 함수
-def blog(request):
-    # 모든 Post를 가져와 postlist에 저장
-    postList = Post.objects.all()
-    return render(request, 'main/blog.html', {'postlist':postList})
 
 # blog의 게시글(posting)을 부르는 posting 함수
 def posting(request, pk):
@@ -130,28 +124,42 @@ def like_comment(request, comment_pk):
 
 # blog함수 생성
 def blog(request):
-    # 검색어를 가져오고, 검색어가 없다면 빈 상태
     search_query = request.GET.get('search', '')
     sort = request.GET.get('sort', 'recent')
-    
-    # 검색
+
+    postlist = Post.objects.all()
+
     if search_query:
-        # 제목에 검색어가 포함된 글 리스트 (대소문자 구분 없이)
-        postList = Post.objects.filter(postname__icontains=search_query)
-    else:
-        # 검색어가 없다면 모든 글 띄우기
-        postList = Post.objects.all()
+        postlist = postlist.filter(postname__icontains=search_query)
 
-    # 정렬
-    postList = postList.annotate(like_count=Count('like_users'))
-
-    if sort == 'popular': # 좋아요순
-        postList = postList.order_by('-like_users')
-    else: # 시간순
-        postList = postList.order_by('-created_at')
+    # 정렬 처리
+    if sort == 'recent':
+        postlist = postlist.order_by('-created_at')
+    elif sort == 'popular':
+        postlist = postlist.order_by('-view_count')
+    elif sort == 'safety_high':
+        postlist = postlist.annotate(
+            safety_order=Case(
+                When(safety_level='high', then=3),
+                When(safety_level='medium', then=2),
+                When(safety_level='low', then=1),
+                default=0,
+                output_field=IntegerField(),
+            )
+        ).order_by('-safety_order')
+    elif sort == 'safety_low':
+        postlist = postlist.annotate(
+            safety_order=Case(
+                When(safety_level='high', then=3),
+                When(safety_level='medium', then=2),
+                When(safety_level='low', then=1),
+                default=0,
+                output_field=IntegerField(),
+            )
+        ).order_by('safety_order')
 
     return render(request, 'main/blog.html', {
-        'postlist': postList,
+        'postlist': postlist,
         'search_query': search_query,
         'sort': sort
     })

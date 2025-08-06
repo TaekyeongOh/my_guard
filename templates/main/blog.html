@@ -5,12 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>마이가드 - 게시판</title>
-    <link rel="stylesheet" href="../../static/css/blog.css">
+  <link rel="stylesheet" href="../../static/css/blog.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.6/dist/web/static/pretendard.css" />
-
-  <style>
-
-  </style>
 </head>
 
 <body>
@@ -21,15 +17,17 @@
         <div class="logo-icon">🛡️</div>
         <div class="logo-text">마이가드</div>
       </div>
-  <button class="home-btn" onclick="location.href='/'">🏠</button>
+      <button class="home-btn" onclick="location.href='/'">🏠</button>
     </header>
 
     <!-- ✅ 검색 & 정렬 -->
     <form method="get" action="{% url 'main:blog' %}" class="search-bar">
       <input type="text" name="search" placeholder="검색" value="{{ search_query }}">
       <select name="sort">
-        <option value="recent" {% if sort == 'recent' %}selected{% endif %}>최신순</option>
-        <option value="popular" {% if sort == 'popular' %}selected{% endif %}>인기순</option>
+        <option value="recent" {% if sort == "recent" %}selected{% endif %}>최신순</option>
+        <option value="popular" {% if sort == "popular" %}selected{% endif %}>인기순</option>
+        <option value="safety_high" {% if sort == "safety_high" %}selected{% endif %}>안전도 높은순</option>
+        <option value="safety_low" {% if sort == "safety_low" %}selected{% endif %}>안전도 낮은순</option>
       </select>
       <button type="submit">검색</button>
     </form>
