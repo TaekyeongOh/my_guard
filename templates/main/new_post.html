@@ -1,43 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>글쓰기 페이지</title>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>마이가드 - 글쓰기</title>
+
+    <link rel="stylesheet" href="{% static 'css/new_post.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.6/dist/web/static/pretendard.css" />
 </head>
 
+
 <body>
-    <h1>글쓰기 페이지</h1>
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        제목 <br>
-        <input type="text" name="postname"><br>
+    <div class="main-container">
+        <!-- ✅ 헤더 -->
+        <header>
+            <div class="header-left">
+                <div class="logo-icon">🛡️</div>
+                <div class="logo-text">마이가드</div>
+            </div>
+            <button class="home-btn" onclick="location.href='/'">🏠</button>
+        </header>
 
-        작성자 닉네임 : {{nickname}} <br>
+        <!-- ✅ 글쓰기 폼 -->
+        <form id="post-form" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="postname">제목</label>
+            <input type="text" id="postname" name="postname" required>
 
-        지역 위치<br>
-        <input type="text" name="location" placeholder="예: 서울시 강남구 삼성동"><br>
+            <div class="nickname">✏️ 작성자 닉네임: <strong>{{ nickname }}</strong></div>
 
-        거리<br>
-        <select name="distance">
-            <option value="10m">10m</option>
-            <option value="50m">50m</option>
-            <option value="100m">100m</option>
-        </select><br>
+            <label for="location">지역 위치</label>
+            <input type="text" id="location" name="location" placeholder="예: 서울시 강남구 삼성동" required>
 
-        안전도<br>
-        <select name="safety_level">
-            <option value="high">상</option>
-            <option value="medium">중</option>
-            <option value="low">하</option>
-        </select><br><br>
+            <label for="distance">거리</label>
+            <select id="distance" name="distance">
+                <option value="10m">10m</option>
+                <option value="50m">50m</option>
+                <option value="100m">100m</option>
+            </select>
 
-        내용<br>
-        <textarea rows="10" cols="50" name="contents"></textarea><br>
-        <input type="file" name="mainphoto"><br>
-        <input type="submit" value="글쓰기">
-    </form>
+            <label for="safety_level">안전도</label>
+            <select id="safety_level" name="safety_level">
+                <option value="high">상</option>
+                <option value="medium">중</option>
+                <option value="low">하</option>
+            </select>
+
+            <label for="contents">내용</label>
+            <textarea id="contents" name="contents" placeholder="내용을 입력하세요..."></textarea>
+
+            <label for="mainphoto">사진 첨부</label>
+            <input type="file" name="mainphoto" id="mainphoto">
+
+            <!-- ✅ form 내부에 버튼 두기 -->
+            <button type="submit" class="submit-btn">글쓰기 완료</button>
+        </form>
+
+
+        <!-- ✅ 글쓰기 버튼 (nav 위에 고정) -->
+        <button type="submit" form="post-form" class="submit-btn">글쓰기 완료</button>
+
+        <!-- ✅ 하단 내비게이션 -->
+        <nav>
+            <div class="nav-inner">
+                <a href="/map">경찰서</a>
+                <a href="/blog" class="active">게시판</a>
+                <a href="/user/manage-emergency-contacts/">긴급연락처</a>
+                <a href="/user/mypage/">마이페이지</a>
+            </div>
+        </nav>
+    </div>
 </body>
 
 </html>
