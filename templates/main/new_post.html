@@ -27,7 +27,7 @@
         <form id="post-form" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <label for="postname">제목</label>
-            <input type="text" id="postname" name="postname" required>
+            <input type="text" id="postname" name="postname" placeholder="제목은 위치로 자동입력됩니다." readonly required>
 
             <div class="nickname">✏️ 작성자 닉네임: <strong>{{ nickname }}</strong></div>
 
@@ -83,6 +83,8 @@
             oncomplete: function (data) {
                 // 선택한 주소를 location input에 자동 입력
                 document.getElementById('location').value = data.address;
+                // 선택한 주소를 postname input에도 자동 입력
+                document.getElementById('postname').value = data.address;
             }
         }).open();
     }
