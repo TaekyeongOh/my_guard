@@ -32,6 +32,8 @@
             <div class="nickname">✏️ 작성자 닉네임: <strong>{{ nickname }}</strong></div>
 
             <label for="location">지역 위치</label>
+            <!-- 주소 검색 버튼 추가 -->
+            <button type="button" onclick="execDaumPostcode()">주소 검색</button>
             <input type="text" id="location" name="location" placeholder="예: 서울시 강남구 삼성동" required>
 
             <label for="distance">거리</label>
@@ -73,5 +75,17 @@
         </nav>
     </div>
 </body>
+<!-- 다음 주소 API 스크립트 -->
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+    function execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function (data) {
+                // 선택한 주소를 location input에 자동 입력
+                document.getElementById('location').value = data.address;
+            }
+        }).open();
+    }
+</script>
 
 </html>
