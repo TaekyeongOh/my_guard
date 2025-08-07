@@ -1,136 +1,58 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../static/css/emergency_contacts.css">
+    <link rel="stylesheet" href="../../static/css/emergency.css">
+    <link rel="stylesheet" href="../../static/css/mypage.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.6/dist/web/static/pretendard.css" />
     <title>긴급 연락처 설정</title>
-    <style>
-    
-    </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>긴급 연락처 설정</h1>
+    <div class="main-container">
+        <!-- ✅ 헤더 -->
+        <header>
+            <div class="logo-box">
+                <div class="logo-icon">🛡️</div>
+                <div class="logo-text">마이가드</div>
+            </div>
+            <div class="home-btn" onclick="location.href='/'">🏠</div>
+        </header>
+
+         <!-- ✅ 메인 콘텐츠 -->
+        <div class="content">
+            <h1 class="page-title">긴급 연락처 설정</h1>
+            
+            <div class="contact-form">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ formset.management_form }}
+                    {% for form in formset %}
+                        <fieldset>
+                            <legend>긴급 연락처 {{ forloop.counter }}</legend>
+                            {{ form.as_p }}
+                            {# 삭제 체크박스 추가 #}
+                        </fieldset>
+                    {% endfor %}
+                    
+                    <div class="button-group">
+                        <button type="submit">저장</button>
+                        <button type="button" onclick="window.history.back()">뒤로 가기</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        
-        <div class="form-container">
-            <form method="post">
-                <!-- Django CSRF Token -->
-                <!-- {{ formset.management_form }} -->
-                
-                <!-- 예시 연락처 1 -->
-                <fieldset>
-                    <legend>긴급 연락처 1</legend>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="name1">이름</label>
-                            <input type="text" id="name1" name="name1" placeholder="이름을 입력하세요">
-                        </div>
-                        <div class="form-group">
-                            <label for="relationship1">관계</label>
-                            <select id="relationship1" name="relationship1">
-                                <option value="">관계를 선택하세요</option>
-                                <option value="family">가족</option>
-                                <option value="friend">친구</option>
-                                <option value="colleague">동료</option>
-                                <option value="other">기타</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="phone1">전화번호</label>
-                            <input type="tel" id="phone1" name="phone1" placeholder="010-0000-0000">
-                        </div>
-                        <div class="form-group">
-                            <label for="email1">이메일</label>
-                            <input type="email" id="email1" name="email1" placeholder="example@email.com">
-                        </div>
-                    </div>
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="delete1" name="delete1">
-                        <label for="delete1">이 연락처를 삭제합니다</label>
-                    </div>
-                </fieldset>
 
-                <!-- 예시 연락처 2 -->
-                <fieldset>
-                    <legend>긴급 연락처 2</legend>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="name2">이름</label>
-                            <input type="text" id="name2" name="name2" placeholder="이름을 입력하세요">
-                        </div>
-                        <div class="form-group">
-                            <label for="relationship2">관계</label>
-                            <select id="relationship2" name="relationship2">
-                                <option value="">관계를 선택하세요</option>
-                                <option value="family">가족</option>
-                                <option value="friend">친구</option>
-                                <option value="colleague">동료</option>
-                                <option value="other">기타</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="phone2">전화번호</label>
-                            <input type="tel" id="phone2" name="phone2" placeholder="010-0000-0000">
-                        </div>
-                        <div class="form-group">
-                            <label for="email2">이메일</label>
-                            <input type="email" id="email2" name="email2" placeholder="example@email.com">
-                        </div>
-                    </div>
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="delete2" name="delete2">
-                        <label for="delete2">이 연락처를 삭제합니다</label>
-                    </div>
-                </fieldset>
-
-                <!-- 예시 연락처 3 -->
-                <fieldset>
-                    <legend>긴급 연락처 3</legend>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="name3">이름</label>
-                            <input type="text" id="name3" name="name3" placeholder="이름을 입력하세요">
-                        </div>
-                        <div class="form-group">
-                            <label for="relationship3">관계</label>
-                            <select id="relationship3" name="relationship3">
-                                <option value="">관계를 선택하세요</option>
-                                <option value="family">가족</option>
-                                <option value="friend">친구</option>
-                                <option value="colleague">동료</option>
-                                <option value="other">기타</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="phone3">전화번호</label>
-                            <input type="tel" id="phone3" name="phone3" placeholder="010-0000-0000">
-                        </div>
-                        <div class="form-group">
-                            <label for="email3">이메일</label>
-                            <input type="email" id="email3" name="email3" placeholder="example@email.com">
-                        </div>
-                    </div>
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="delete3" name="delete3">
-                        <label for="delete3">이 연락처를 삭제합니다</label>
-                    </div>
-                </fieldset>
-
-                <div class="button-group">
-                    <button type="submit" class="btn-primary">저장</button>
-                    <button type="button" class="btn-secondary" onclick="window.history.back()">뒤로 가기</button>
-                </div>
-            </form>
-        </div>
+        <!-- ✅ 하단 내비게이션 -->
+        <nav>
+            <a href="/map">경찰서</a>
+            <a href="/blog">게시판</a>
+            <a href="/user/manage-emergency-contacts/" class="active">긴급연락처</a>
+            <a href="/user/mypage/">마이페이지</a>
+        </nav>
     </div>
 </body>
+
 </html>
