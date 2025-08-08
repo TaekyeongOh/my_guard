@@ -1,17 +1,147 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>회원가입</title>
-</head>
-<body>
-    <h2>회원가입</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }} 
-        <button type="submit">가입</button>
-        <a href="{% url 'login' %}">로그인 하러 가기</a>
-    </form>
-</body>
-</html>
 
+<head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>마이가드 - 회원가입</title>
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.6/dist/web/static/pretendard.css" />
+</head>
+
+<body>
+    <div class="main-container">
+        <!-- ✅ 헤더 -->
+        <header>
+            <div class="header-center">
+                <div class="logo-icon">🛡️</div>
+                <div class="logo-text">마이가드</div>
+            </div>
+        </header>
+
+        <!-- ✅ 회원가입 컨텐츠 -->
+        <div class="signup-content">
+            <div class="welcome-text">
+                <h2>마이가드에 오신 것을 환영합니다!</h2>
+                <p>안전한 우리 동네를 만들어가요</p>
+            </div>
+
+            <!-- ✅ 회원가입 폼 -->
+            <form method="post" id="signup-form" novalidate>
+                {% csrf_token %}
+
+                {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">
+                        {% if field.name == 'username' %}사용자이름
+                        {% elif field.name == 'nickname' %}닉네임
+                        {% elif field.name == 'id' %}아이디
+                        {% elif field.name == 'email' %}이메일
+                        {% elif field.name == 'phone_number' %}전화번호
+                        {% elif field.name == 'password1' %}비밀번호
+                        {% elif field.name == 'password2' %}비밀번호 확인
+                        {% else %}{{ field.label }}
+                        {% endif %}
+                    </label>
+
+                    {{ field }}
+
+                    {% if field.name == 'username' %}
+                    <div class="help-text">영문, 숫자, @, ., +, -, _ 만 사용 가능합니다.</div>
+                    {% elif field.name == 'nickname' %}
+                    <div class="help-text">게시판에서 사용될 닉네임입니다.</div>
+                    {% elif field.name == 'password1' %}
+                    <div class="help-text">8자 이상이어야 하며, 개인정보와 유사하지 않아야 합니다.</div>
+                    {% elif field.name == 'password2' %}
+                    <div class="help-text">위와 동일한 비밀번호를 입력해주세요.</div>
+                    {% endif %}
+
+                    {% if field.errors %}
+                    <ul class="errorlist">
+                        {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <button type="submit" class="submit-btn">회원가입 완료</button>
+            </form>
+
+
+            <div class="divider">
+                <span>이미 계정이 있으신가요?</span>
+            </div>
+
+            <!-- ✅ 로그인 링크 -->
+            <div class="link-section">
+                <a href="{% url 'login' %}" class="link-btn">로그인 하러 가기</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ✅ Django 메시지 처리 -->
+    {% if messages %}
+    {% for message in messages %}
+    <div class="message-overlay" onclick="this.remove()">
+        <div class="message-box" onclick="event.stopPropagation()">
+            <p>{{ message }}</p>
+            <button onclick="this.closest('.message-overlay').remove()">확인</button>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <!-- ✅ JS -->
+    <script>
+        function showMessage(text) {
+            const overlay = document.createElement('div');
+            overlay.className = 'message-overlay';
+            overlay.onclick = () => overlay.remove();
+
+            overlay.innerHTML = `
+                <div class="message-box" onclick="event.stopPropagation()">
+                    <p>${text}</p>
+                    <button onclick="this.closest('.message-overlay').remove()">확인</button>
+                </div>
+            `;
+
+            document.body.appendChild(overlay);
+        }
+
+        const form = document.getElementById('signup-form');
+        if (form) {
+            form.addEventListener('submit', function (event) {
+                const pw1 = document.getElementById('id_password1');
+                const pw2 = document.getElementById('id_password2');
+
+                if (pw1 && pw2) {
+                    if (pw1.value !== pw2.value) {
+                        event.preventDefault();
+                        showMessage('비밀번호가 일치하지 않습니다.');
+                        return;
+                    }
+                    if (pw1.value.length < 8) {
+                        event.preventDefault();
+                        showMessage('비밀번호는 8자 이상이어야 합니다.');
+                        return;
+                    }
+                }
+            });
+        }
+
+        const pw1 = document.getElementById('id_password1');
+        const pw2 = document.getElementById('id_password2');
+        if (pw1 && pw2) {
+            pw2.addEventListener('input', function () {
+                if (pw1.value && pw2.value) {
+                    pw2.style.borderColor = pw1.value === pw2.value ? '#059669' : '#dc2626';
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

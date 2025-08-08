@@ -1,0 +1,281 @@
+/* 기본 박스 설정 */
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Pretendard', sans-serif;
+    background-color: #f0f4ff;
+}
+
+/* 컨테이너 */
+.main-container {
+    max-width: 430px;
+    width: 100%;
+    margin: 0 auto;
+    min-height: 100vh;
+    position: relative;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 헤더 */
+header {
+    background: #3b82f6;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header-center {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo-icon {
+    width: 2rem;
+    height: 2rem;
+    background: white;
+    color: #3b82f6;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.875rem;
+}
+
+.logo-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+}
+
+/* 콘텐츠 영역 */
+.signup-content {
+    flex: 1;
+    padding: 2rem 1.5rem;
+    overflow-y: auto;
+}
+
+.welcome-text {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.welcome-text h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.welcome-text p {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+/* 폼 */
+form {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    font-weight: 500;
+    margin-top: 1rem;
+    margin-bottom: 0.25rem;
+    color: #374151;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+select,
+textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    transition: border-color 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* submit 버튼 */
+.submit-btn {
+    width: 100%;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 1.5rem;
+    transition: background-color 0.2s ease;
+}
+
+.submit-btn:hover {
+    background-color: #2563eb;
+}
+
+/* 링크 버튼 */
+.link-section {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.link-btn {
+    background-color: #f8fafc;
+    color: #374151;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+    transition: all 0.2s ease;
+}
+
+.link-btn:hover {
+    background-color: #f1f5f9;
+    border-color: #d1d5db;
+    color: #1f2937;
+}
+
+/* 구분선 */
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e5e7eb;
+}
+
+.divider span {
+    padding: 0 1rem;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+/* form group */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group:first-child {
+    margin-top: 0;
+}
+
+/* 도움말 텍스트 */
+.help-text {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+    line-height: 1.4;
+}
+
+/* 에러 메시지 */
+.errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 0.25rem 0 0 0;
+}
+
+.errorlist li {
+    color: #dc2626;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+/* p 태그 감싸기용 (form.as_p 호환용) */
+form p {
+    margin: 0;
+    margin-bottom: 1rem;
+}
+
+/* 메시지 처리 */
+.message-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.message-box {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    max-width: 300px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.message-box button {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    margin-top: 1rem;
+    cursor: pointer;
+}
+
+/* 로그인화면으로 돌아가기*/
+.small-btn {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #000000;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    text-align: center;
+    margin-top: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.small-btn:hover {
+    background-color: #f3f4f6; /* 약간 회색 배경 */
+}
