@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from .forms import SignUpForm, LoginForm, EmergencyContactFormSet
 from .models import CustomUser, EmergencyContact
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 
 
 #회원가입 기능
@@ -95,12 +96,10 @@ def manage_emergency_contacts_view(request):
                 obj.delete()
 
             messages.success(request, "긴급 연락처가 성공적으로 저장되었습니다.")
-            return redirect('/')
+            return redirect(reverse('manage_emergency_contacts'))
         else:
             messages.error(request, '긴급 연락처 저장에 실패했습니다. 입력 양식을 확인해주세요.')
-    else:
-        formset = EmergencyContactFormSet(queryset=queryset)
-
+    formset = EmergencyContactFormSet(queryset=queryset)
     return render(request, 'user/emergency_contacts.html', {'formset': formset})
 
 # mypage
