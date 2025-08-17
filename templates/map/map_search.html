@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>마이가드 - 길찾기</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.6/dist/web/static/pretendard.css" />
-    <link rel="stylesheet" href="../../static/css/map_search.css">
+  <link rel="stylesheet" href="../../static/css/map_search.css">
 </head>
+
 <body>
   <div class="main-container">
     <!-- ✅ 헤더 -->
@@ -48,10 +50,9 @@
       </div>
     </div>
 
-    <!-- ✅ 하단 네비게이션 -->
     <nav>
       <a href="/map">경찰서</a>
-      <a href="/navigation" class="active">길찾기</a>
+      <a href="/map/search">길 찾기</a>
       <a href="/blog">게시판</a>
       <a href="/user/manage-emergency-contacts/">긴급연락처</a>
       <a href="/user/mypage/">마이페이지</a>
@@ -69,11 +70,11 @@
       kakao.maps.load(() => {
         let presentPosition; // 현재 위치 (길찾기 출발지 계산용)
         const mapContainer = document.getElementById('map');
-        const mapOption = { center:new kakao.maps.LatLng(37.566826,126.9786567), level:5 };
+        const mapOption = { center: new kakao.maps.LatLng(37.566826, 126.9786567), level: 5 };
         const map = new kakao.maps.Map(mapContainer, mapOption);
         const ps = new kakao.maps.services.Places();
         const geocoder = new kakao.maps.services.Geocoder();
-        const infowindow = new kakao.maps.InfoWindow({ zIndex:1 });
+        const infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
         let markers = [];
 
         // ✅ 현재 위치로 이동(원본 기능)
@@ -91,18 +92,18 @@
           searchPlaces();
         });
 
-        function searchPlaces(){
+        function searchPlaces() {
           const keyword = document.getElementById('keyword').value.trim();
-          if (!keyword){ alert('원하는 위치를 입력해주세요!'); return; }
+          if (!keyword) { alert('원하는 위치를 입력해주세요!'); return; }
           ps.keywordSearch(keyword, placesSearchCB);
         }
 
         // ✅ 검색 콜백(원본 기능)
-        function placesSearchCB(data, status, pagination){
-          if (status === kakao.maps.services.Status.OK){
+        function placesSearchCB(data, status, pagination) {
+          if (status === kakao.maps.services.Status.OK) {
             displayPlaces(data);
             displayPagination(pagination);
-          } else if (status === kakao.maps.services.Status.ZERO_RESULT){
+          } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
             alert('검색 결과가 없습니다.');
           } else {
             alert('검색 중 오류가 발생했습니다.');
@@ -110,7 +111,7 @@
         }
 
         // ✅ 결과/마커/hover/클릭/길찾기(원본 기능)
-        function displayPlaces(places){
+        function displayPlaces(places) {
           const listEl = document.getElementById('placesList');
           const bounds = new kakao.maps.LatLngBounds();
           const fragment = document.createDocumentFragment();
@@ -118,21 +119,21 @@
           removeAllChildNods(listEl);
           removeMarker();
 
-          places.forEach((place,i)=>{
+          places.forEach((place, i) => {
             const placePosition = new kakao.maps.LatLng(place.y, place.x);
-            const marker = addMarker(placePosition,i);
-            const itemEl = getListItem(i,place);
+            const marker = addMarker(placePosition, i);
+            const itemEl = getListItem(i, place);
             bounds.extend(placePosition);
 
-            kakao.maps.event.addListener(marker,'mouseover',()=>displayInfowindow(marker, place.place_name));
-            kakao.maps.event.addListener(marker,'mouseout',()=>infowindow.close());
+            kakao.maps.event.addListener(marker, 'mouseover', () => displayInfowindow(marker, place.place_name));
+            kakao.maps.event.addListener(marker, 'mouseout', () => infowindow.close());
 
-            itemEl.addEventListener('mouseover',()=>displayInfowindow(marker, place.place_name));
-            itemEl.addEventListener('mouseout',()=>infowindow.close());
+            itemEl.addEventListener('mouseover', () => displayInfowindow(marker, place.place_name));
+            itemEl.addEventListener('mouseout', () => infowindow.close());
 
             const goToMap = () => {
-              searchDetailAddrFromCoords(presentPosition,(result,status)=>{
-                if(status===kakao.maps.services.Status.OK){
+              searchDetailAddrFromCoords(presentPosition, (result, status) => {
+                if (status === kakao.maps.services.Status.OK) {
                   const start = result[0].road_address?.address_name || result[0].address.address_name;
                   const end = place.place_name;
                   location.href = `https://map.kakao.com/?sName=${start}&eName=${end}`;
@@ -143,7 +144,7 @@
             };
 
             itemEl.addEventListener('click', goToMap);
-            kakao.maps.event.addListener(marker,'click', goToMap);
+            kakao.maps.event.addListener(marker, 'click', goToMap);
 
             fragment.appendChild(itemEl);
           });
@@ -152,11 +153,11 @@
           map.setBounds(bounds);
         }
 
-        function getListItem(index, place){
+        function getListItem(index, place) {
           const el = document.createElement('li');
           el.className = 'item';
           el.innerHTML = `
-            <span class="markerbg marker_${index+1}"></span>
+            <span class="markerbg marker_${index + 1}"></span>
             <div class="info">
               <h5>${place.place_name}</h5>
               <span>${place.road_address_name || place.address_name}</span><br>
@@ -165,45 +166,46 @@
           return el;
         }
 
-        function addMarker(position, idx){
+        function addMarker(position, idx) {
           const marker = new kakao.maps.Marker({ position });
           marker.setMap(map);
           markers.push(marker);
           return marker;
         }
 
-        function removeMarker(){ markers.forEach(m=>m.setMap(null)); markers = []; }
+        function removeMarker() { markers.forEach(m => m.setMap(null)); markers = []; }
 
-        function displayInfowindow(marker, title){
+        function displayInfowindow(marker, title) {
           infowindow.setContent(`<div style="padding:5px;">${title}</div>`);
           infowindow.open(map, marker);
         }
 
         // ✅ 페이지네이션(원본 기능)
-        function displayPagination(pagination){
+        function displayPagination(pagination) {
           const paginationEl = document.getElementById('pagination');
           const fragment = document.createDocumentFragment();
-          while(paginationEl.hasChildNodes()){ paginationEl.removeChild(paginationEl.lastChild); }
+          while (paginationEl.hasChildNodes()) { paginationEl.removeChild(paginationEl.lastChild); }
 
-          for(let i=1;i<=pagination.last;i++){
+          for (let i = 1; i <= pagination.last; i++) {
             const a = document.createElement('a');
-            a.href="#"; a.innerHTML=i;
-            if(i===pagination.current){ a.className='on'; }
-            else { a.addEventListener('click',()=>pagination.gotoPage(i)); }
+            a.href = "#"; a.innerHTML = i;
+            if (i === pagination.current) { a.className = 'on'; }
+            else { a.addEventListener('click', () => pagination.gotoPage(i)); }
             fragment.appendChild(a);
           }
           paginationEl.appendChild(fragment);
         }
 
-        function removeAllChildNods(el){ while(el.hasChildNodes()){ el.removeChild(el.lastChild); } }
+        function removeAllChildNods(el) { while (el.hasChildNodes()) { el.removeChild(el.lastChild); } }
 
         // ✅ 현재 좌표 → 주소(길찾기 출발지) (원본 기능)
-        function searchDetailAddrFromCoords(coords, cb){
-          if(!coords){ alert('현재 위치 정보가 없습니다.'); return; }
+        function searchDetailAddrFromCoords(coords, cb) {
+          if (!coords) { alert('현재 위치 정보가 없습니다.'); return; }
           geocoder.coord2Address(coords.getLng(), coords.getLat(), cb);
         }
       });
     };
   </script>
 </body>
+
 </html>

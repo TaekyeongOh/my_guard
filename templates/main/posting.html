@@ -23,7 +23,7 @@
 
     <div class="content">
       <h2>{{post.postname}}</h2>
-      
+
       <div class="meta-info">
         <div class="meta-row">
           <span class="meta-label">작성자:</span>
@@ -68,14 +68,14 @@
       </form>
 
       <hr>
-      
+
       <div class="action-links">
         <a href="/blog/">목록</a>
         <a href="/blog/{{post.pk}}/remove">삭제</a>
       </div>
 
       <hr>
-      
+
       {% if user.is_authenticated %}
       <div class="comment-form">
         <form action="{% url 'main:comments_create' post.pk %}" method="POST">
@@ -104,9 +104,9 @@
               <span class="comment-author">{{ comment.author.nickname }}</span>
               <span class="comment-date">{{ comment.created_at|date:"Y년 m월 d일 H:i" }}</span>
             </div>
-            
+
             <div class="comment-content">{{ comment.content }}</div>
-            
+
             <div class="comment-actions">
               <form action="{% url 'main:like_comment' comment.pk %}" method="POST" style="display: inline;">
                 {% csrf_token %}
@@ -143,8 +143,8 @@
 
             <!-- 답글 작성 폼 -->
             <div class="reply-container" id="reply-container-{{ comment.pk }}">
-              <form id="reply-form-{{ comment.pk }}" action="{% url 'main:comments_create' post.pk %}" method="POST" 
-                    class="reply-form" style="display: none;">
+              <form id="reply-form-{{ comment.pk }}" action="{% url 'main:comments_create' post.pk %}" method="POST"
+                class="reply-form" style="display: none;">
                 {% csrf_token %}
                 <input type="hidden" name="parent_id" value="{{ comment.pk }}">
                 {{ comment_form }}
@@ -158,19 +158,13 @@
       </div>
     </div>
 
+    <!-- ✅ 하단 내비 -->
     <nav>
-      <a href="/map">
-        <div>경찰서</div>
-      </a>
-      <a href="/blog" class="active">
-        <div>게시판</div>
-      </a>
-      <a href="/user/manage-emergency-contacts/">
-        <div>긴급연락처</div>
-      </a>
-      <a href="/user/mypage/">
-        <div>마이페이지</div>
-      </a>
+      <a href="/map">경찰서</a>
+      <a href="/map/search">길 찾기</a>
+      <a href="/blog">게시판</a>
+      <a href="/user/manage-emergency-contacts/">긴급연락처</a>
+      <a href="/user/mypage/">마이페이지</a>
     </nav>
   </div>
 
