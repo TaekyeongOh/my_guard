@@ -18,7 +18,6 @@ body {
   min-height: 100vh;
   position: relative;
   padding-bottom: 6rem;
-  /* nav 높이 확보 */
   background-color: #ffffff;
 }
 
@@ -116,7 +115,6 @@ input[type="file"] {
   margin-bottom: 0.75rem;
 }
 
-/* ✅ 글쓰기 버튼 (main-container 안, nav 위에 고정) */
 .submit-btn {
   position: absolute;
   bottom: 4rem;
@@ -137,9 +135,6 @@ input[type="file"] {
   background-color: #2563eb;
 }
 
-
-
-/* ✅ 하단 내비게이션 */
 nav {
   position: absolute;
   bottom: 0;

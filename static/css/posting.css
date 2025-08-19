@@ -23,7 +23,6 @@
       flex-direction: column;
   }
 
-  /* 헤더 스타일 */
   header {
       background: #3b82f6;
       color: white;
@@ -81,15 +80,12 @@
       background: rgba(255, 255, 255, 0.35);
   }
 
-  /* 메인 콘텐츠 영역 */
   .content {
       flex: 1;
       padding: 1.5rem;
       padding-bottom: 7rem;
-      /* 네비게이션 공간 확보 */
   }
 
-  /* 제목 스타일 */
   h2 {
       color: #1e293b;
       font-size: 1.5rem;
@@ -100,7 +96,6 @@
       padding-bottom: 0.75rem;
   }
 
-  /* 메타 정보 박스 */
   .meta-info {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
@@ -152,7 +147,6 @@
       background: linear-gradient(135deg, #ef4444, #dc2626);
   }
 
-  /* 본문 내용 */
   .content-text {
       color: #374151;
       font-size: 1rem;
@@ -171,7 +165,6 @@
       margin-bottom: 1rem;
   }
 
-  /* 이미지 스타일 */
   .post-image {
       width: 100%;
       max-width: 100%;
@@ -181,15 +174,12 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
-  /* 구분선 */
   hr {
       margin: 2rem 0;
       border: 0;
       height: 1px;
       background: linear-gradient(to right, transparent, #e2e8f0, transparent);
   }
-
-  /* 좋아요 섹션 */
   .like-section {
       display: flex;
       align-items: center;
@@ -231,7 +221,6 @@
       font-weight: 500;
   }
 
-  /* 액션 링크 */
   .action-links {
       display: flex;
       gap: 1rem;
@@ -253,7 +242,6 @@
       color: white;
   }
 
-  /* 댓글 작성 폼 */
   .comment-form {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
@@ -313,8 +301,6 @@
       color: #3b82f6;
       border-color: #3b82f6;
   }
-
-  /* 댓글 섹션 */
   .comments-section h3 {
       color: #1e293b;
       font-size: 1.25rem;
@@ -333,8 +319,6 @@
       font-size: 0.75rem;
       font-weight: 600;
   }
-
-  /* 댓글 리스트 */
   .comments-list {
       list-style: none;
       padding: 0;
@@ -413,7 +397,6 @@
       color: #3b82f6;
   }
 
-  /* 답글 스타일 */
   .replies-list {
       list-style: none;
       padding: 0;
@@ -435,8 +418,6 @@
       color: #6b7280;
       margin-right: 0.5rem;
   }
-
-  /* 답글 작성 폼 */
   .reply-form {
       margin-top: 1rem;
       padding: 1rem;
@@ -465,8 +446,6 @@
       font-size: 0.875rem;
       cursor: pointer;
   }
-
-  /* 하단 네비게이션 */
   nav {
       position: fixed;
       bottom: 0;
@@ -514,8 +493,6 @@
   .nav-icon {
       font-size: 1.25rem;
   }
-
-  /* 반응형 조정 */
   @media (max-width: 375px) {
       .content {
           padding: 1rem;

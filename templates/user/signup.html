@@ -12,7 +12,7 @@
 
 <body>
     <div class="main-container">
-        <!-- ✅ 헤더 -->
+
         <header>
             <div class="header-center">
                 <div class="logo-icon">🛡️</div>
@@ -20,14 +20,14 @@
             </div>
         </header>
 
-        <!-- ✅ 회원가입 컨텐츠 -->
+
         <div class="signup-content">
             <div class="welcome-text">
                 <h2>마이가드에 오신 것을 환영합니다!</h2>
                 <p>안전한 우리 동네를 만들어가요</p>
             </div>
 
-            <!-- ✅ 회원가입 폼 -->
+
             <form method="post" id="signup-form" novalidate>
                 {% csrf_token %}
 
@@ -75,14 +75,12 @@
                 <span>이미 계정이 있으신가요?</span>
             </div>
 
-            <!-- ✅ 로그인 링크 -->
             <div class="link-section">
                 <a href="{% url 'login' %}" class="link-btn">로그인 하러 가기</a>
             </div>
         </div>
     </div>
 
-    <!-- ✅ Django 메시지 처리 -->
     {% if messages %}
     {% for message in messages %}
     <div class="message-overlay" onclick="this.remove()">
@@ -94,7 +92,6 @@
     {% endfor %}
     {% endif %}
 
-    <!-- ✅ JS -->
     <script>
         function showMessage(text) {
             const overlay = document.createElement('div');

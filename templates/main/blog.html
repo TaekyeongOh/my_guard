@@ -12,7 +12,6 @@
 
 <body>
   <div class="main-container">
-    <!-- ✅ 헤더 -->
     <header class="header">
       <div class="logo-box">
         <div class="logo-icon">🛡️</div>
@@ -20,8 +19,6 @@
       </div>
       <button class="home-btn" onclick="location.href='/'">🏠</button>
     </header>
-
-    <!-- ✅ 검색 & 정렬 -->
     <form method="get" action="{% url 'main:blog' %}" class="search-bar">
       <input type="text" name="search" placeholder="검색" value="{{ search_query }}">
       <select name="sort">
@@ -32,8 +29,6 @@
       </select>
       <button type="submit">검색</button>
     </form>
-
-    <!-- ✅ 게시글 목록 -->
     <div class="post-list">
       {% for item in postlist %}
       <div class="post-item">
@@ -44,11 +39,7 @@
       <p>등록된 게시글이 없습니다.</p>
       {% endfor %}
     </div>
-
-    <!-- ✅ 글쓰기 버튼 -->
     <button class="write-btn" onclick="location.href='new_post/'">✏️ 글쓰기</button>
-
-    <!-- ✅ 하단 내비 -->
     <nav>
       <a href="/map">경찰서</a>
       <a href="/map/search">길 찾기</a>

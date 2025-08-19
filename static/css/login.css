@@ -189,8 +189,6 @@
             color: #6b7280;
             font-size: 0.875rem;
         }
-
-        /* 메시지 처리를 위한 스타일 */
         .message-overlay {
             position: fixed;
             top: 0;

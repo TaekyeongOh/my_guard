@@ -20,7 +20,6 @@ body {
     overflow: hidden;
 }
 
-/* 헤더 */
 .header {
     position: absolute;
     top: 0;
@@ -91,13 +90,11 @@ body {
     background: rgba(255, 255, 255, .35);
 }
 
-/* 지도 */
 #map {
     width: 100%;
     height: 100%;
 }
 
-/* 하단 내비 */
 nav {
     position: absolute;
     bottom: 0;
@@ -133,7 +130,6 @@ nav a.active {
     font-weight: 500;
 }
 
-/* 긴급 버튼 */
 #emergency-button {
     position: absolute;
     bottom: 5rem;
@@ -150,7 +146,6 @@ nav a.active {
     z-index: 20;
 }
 
-/* 콜 메뉴(팝오버) */
 .emergency-menu {
     position: absolute;
     bottom: 9rem;
@@ -184,7 +179,6 @@ nav a.active {
     display: none;
 }
 
-/* ===== 모달 (중앙) ===== */
 .modal {
     position: fixed;
     inset: 0;
@@ -204,7 +198,6 @@ nav a.active {
 .modal-card {
     position: relative;
     z-index: 10001;
-    /* 카드가 백드롭 위 */
     width: calc(100% - 2rem);
     max-width: 380px;
     background: #fff;

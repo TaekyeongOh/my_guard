@@ -21,7 +21,6 @@
             flex-direction: column;
         }
 
-        /* ✅ 헤더 */
         header {
             background: #3b82f6;
             color: white;
@@ -85,14 +84,11 @@
         .home-btn:hover {
             background: rgba(255, 255, 255, 0.35);
         }
-
-        /* ✅ 메인 콘텐츠 */
         .content {
             flex: 1;
             padding: 1.5rem;
             background-color: #f9fafb;
             padding-bottom: 6rem;
-            /* 하단 네비 공간 확보 */
         }
 
         .page-title {
@@ -178,7 +174,6 @@
             background-color: #fef2f2;
         }
 
-        /* ✅ 하단 내비 */
         nav {
             position: absolute;
             bottom: 0;

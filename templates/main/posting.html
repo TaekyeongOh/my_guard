@@ -141,7 +141,6 @@
             </ul>
             {% endif %}
 
-            <!-- 답글 작성 폼 -->
             <div class="reply-container" id="reply-container-{{ comment.pk }}">
               <form id="reply-form-{{ comment.pk }}" action="{% url 'main:comments_create' post.pk %}" method="POST"
                 class="reply-form" style="display: none;">
@@ -157,8 +156,6 @@
         </ul>
       </div>
     </div>
-
-    <!-- ✅ 하단 내비 -->
     <nav>
       <a href="/map">경찰서</a>
       <a href="/map/search">길 찾기</a>

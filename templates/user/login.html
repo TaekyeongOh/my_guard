@@ -12,30 +12,28 @@
 
 <body>
     <div class="main-container">
-        <!-- ✅ 헤더 -->
         <header>
             <div class="header-center">
                 <div class="logo-icon">🛡️</div>
                 <div class="logo-text">마이가드</div>
             </div>
         </header>
-
-        <!-- ✅ 로그인 컨텐츠 -->
+ 
         <div class="login-content">
             <div class="welcome-text">
                 <h2>다시 만나서 반가워요!</h2>
                 <p>안전한 우리 동네를 위해 로그인해주세요</p>
             </div>
 
-            <!-- ✅ 로그인 폼 -->
+    
             <form method="post" id="login-form">
                 {% csrf_token %}
                 
-                <!-- 백엔드에서 form 객체 전달 시 -->
+    
                 {% if form %}
                     {{ form.as_p }}
                 {% else %}
-                    <!-- 수동 입력 UI (백엔드에서 form 안 쓰는 경우) -->
+
                     <label for="username">아이디</label>
                     <input type="text" id="username" name="username" required>
 
@@ -50,7 +48,6 @@
                 <span>또는</span>
             </div>
 
-            <!-- ✅ 링크 섹션 -->
             <div class="link-section">
                 <a href="{% url 'signup' %}" class="link-btn primary">회원가입 하러 가기</a>
 
@@ -62,7 +59,6 @@
         </div>
     </div>
 
-    <!-- ✅ 메시지 처리 (Django messages) -->
     {% if messages %}
     {% for message in messages %}
     <div class="message-overlay" onclick="this.remove()">
@@ -75,7 +71,6 @@
     {% endif %}
 
     <script>
-        // 메시지 표시 함수
         function showMessage(text) {
             const overlay = document.createElement('div');
             overlay.className = 'message-overlay';
@@ -94,13 +89,12 @@
         // 로그인 응답 처리
         function handleLoginResponse(response) {
             if (response.is_authenticated) {
-                // 로컬 스토리지에 사용자 정보 저장
                 localStorage.setItem('user_id', response.id);
                 localStorage.setItem('username', response.username);
                 localStorage.setItem('nickname', response.nickname);
                 console.log('로그인 성공, 사용자 정보 저장');
 
-                window.location.href = '/'; // 홈으로 이동
+                window.location.href = '/'; 
             } else {
                 showMessage('로그인 실패');
             }
@@ -108,7 +102,7 @@
 
         // 로그인 폼 제출 이벤트 처리
         document.getElementById('login-form').addEventListener('submit', function (event) {
-            event.preventDefault(); // 기본 제출 막기
+            event.preventDefault(); 
             const formData = new FormData(this);
 
             fetch('/user/login/', {

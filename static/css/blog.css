@@ -19,8 +19,6 @@
       display: flex;
       flex-direction: column;
     }
-
-    /* ✅ 헤더 */
   header {
       background: #3b82f6;
       color: white;
@@ -82,7 +80,6 @@
   .home-btn:hover {
       background: rgba(255, 255, 255, 0.35);
   }
-    /* ✅ 검색 & 정렬 */
     .search-bar {
       padding: 1rem;
       background-color: white;
@@ -110,8 +107,6 @@
       cursor: pointer;
       font-weight: 500;
     }
-
-    /* ✅ 게시글 리스트 */
     .post-list {
       flex: 1;
       padding: 1rem;
@@ -138,8 +133,6 @@
       color: #6b7280;
       margin-top: 0.25rem;
     }
-
-    /* ✅ 글쓰기 버튼 */
     .write-btn {
       position: absolute;
       bottom: 5rem;
@@ -155,8 +148,6 @@
       z-index: 20;
       cursor: pointer;
     }
-
-    /* ✅ 하단 내비 */
     nav {
       position: absolute;
       bottom: 0;
