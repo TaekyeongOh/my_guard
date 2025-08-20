@@ -14,12 +14,13 @@
         .main-container {
             max-width: 430px;
             width: 100%;
-            min-height: 100vh;
+            height: 100vh;
             margin: 0 auto;
             position: relative;
             display: flex;
             flex-direction: column;
         }
+
         header {
             background: #3b82f6;
             color: white;
@@ -90,6 +91,7 @@
             padding: 1.5rem;
             background-color: #f9fafb;
             padding-bottom: 6rem;
+            overflow-y: auto;
         }
 
         .page-title {
@@ -155,6 +157,7 @@
         .form-group select:focus {
             border-color: #3b82f6;
         }
+
         p {
             margin-bottom: 1rem;
         }
@@ -236,6 +239,7 @@
         button[onclick]:hover {
             background-color: #e5e7eb;
         }
+
         nav {
             position: absolute;
             bottom: 0;

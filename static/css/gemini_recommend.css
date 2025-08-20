@@ -1,3 +1,7 @@
+ * {
+    box-sizing: content-box;
+}
+
 .content-area {
     padding-top: 80px;
     padding-bottom: 0px;
@@ -8,6 +12,28 @@
 .ai-recommend-container {
     padding: 1.5rem;
     max-width: 100%;
+}
+.header-btns {
+    display: flex;
+    gap: .5rem;
+    width: 84px;
+    height: 36px;
+}
+
+.header-btns button {
+    background: rgba(255, 255, 255, .2);
+    border: none;
+    color: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .2s;
+}
+
+.header-btns button:hover {
+    background: rgba(255, 255, 255, .35);
 }
 
 .ai-header {
