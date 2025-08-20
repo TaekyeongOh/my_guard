@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 안전 지역 추천 - 마이가드</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body style="font-family: 'Noto Sans KR', sans-serif; background-color: #f8f9fa;">
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2 class="mb-0">
+                        <i class="fas fa-robot me-2"></i>
+                        AI가 추천하는 가장 안전한 동네는?
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <p class="lead text-muted">
+                            축적된 지역별 안전 정보를 AI가 분석하여<br>
+                            가장 안전한 거주 지역을 추천해드립니다
+                        </p>
+                    </div>
+                    
+                    <div class="text-center mb-4">
+                        <button id="recommend-btn" class="btn btn-primary btn-lg px-5">
+                            <i class="fas fa-magic me-2"></i>
+                            AI에게 추천받기
+                        </button>
+                    </div>
+                    
+                    <!-- 로딩 상태 표시 -->
+                    <div id="loading-area" class="text-center" style="display: none;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">분석 중...</span>
+                        </div>
+                        <p class="mt-3 text-muted">AI가 데이터를 분석하고 있습니다...</p>
+                    </div>
+                    
+                    <!-- 결과 표시 영역 -->
+                    <div id="result-area" class="mt-4" style="display: none;">
+                        <div class="card border-success">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-chart-line me-2"></i>
+                                    AI 분석 결과
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="recommendation-text" class="recommendation-content"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 에러 메시지 영역 -->
+                    <div id="error-area" class="mt-4" style="display: none;">
+                        <div class="alert alert-danger" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <span id="error-message"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.recommendation-content {
+    white-space: pre-line;
+    line-height: 1.6;
+    font-size: 1.1em;
+}
+
+.recommendation-content h3,
+.recommendation-content h4 {
+    color: #2c3e50;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.recommendation-content ul {
+    padding-left: 1.5rem;
+}
+
+.recommendation-content li {
+    margin-bottom: 0.5rem;
+}
+
+.card {
+    border-radius: 15px;
+    border: none;
+}
+
+.card-header {
+    border-radius: 15px 15px 0 0 !important;
+}
+
+.btn-lg {
+    border-radius: 25px;
+    padding: 12px 30px;
+    font-weight: 600;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const recommendBtn = document.getElementById('recommend-btn');
+    const loadingArea = document.getElementById('loading-area');
+    const resultArea = document.getElementById('result-area');
+    const errorArea = document.getElementById('error-area');
+    const recommendationText = document.getElementById('recommendation-text');
+    const errorMessage = document.getElementById('error-message');
+    
+    recommendBtn.addEventListener('click', async function() {
+        // UI 상태 초기화
+        loadingArea.style.display = 'block';
+        resultArea.style.display = 'none';
+        errorArea.style.display = 'none';
+        recommendBtn.disabled = true;
+        recommendBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>분석 중...';
+        
+        try {
+            // API 호출
+            const response = await fetch('/gemini/api/', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // 성공 시 결과 표시
+                recommendationText.textContent = data.recommendation;
+                resultArea.style.display = 'block';
+            } else {
+                // 에러 발생 시
+                errorMessage.textContent = data.error || '추천을 받아오는 중 오류가 발생했습니다.';
+                errorArea.style.display = 'block';
+            }
+            
+        } catch (error) {
+            // 네트워크 에러 등
+            errorMessage.textContent = '네트워크 오류가 발생했습니다. 다시 시도해주세요.';
+            errorArea.style.display = 'block';
+        } finally {
+            // UI 상태 복원
+            loadingArea.style.display = 'none';
+            recommendBtn.disabled = false;
+            recommendBtn.innerHTML = '<i class="fas fa-magic me-2"></i>AI에게 추천받기';
+        }
+    });
+});
+</script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

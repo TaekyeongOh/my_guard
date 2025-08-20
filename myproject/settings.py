@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'user',
     'main',
     'map',
+    'gemini',
 ]
 
 MIDDLEWARE = [
