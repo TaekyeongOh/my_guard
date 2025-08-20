@@ -1,0 +1,133 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI 안전 지역 추천 - 마이가드</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.6/dist/web/static/pretendard.css" />
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'css/gemini_recommend.css' %}">
+</head>
+<body>
+    <div class="main-container">
+        <header class="header">
+            <div class="logo-box">
+                <div class="logo-icon">🤖</div>
+                <div class="logo-text">마이가드</div>
+            </div>
+            <div class="status">📍 안전 지역 분석</div>
+            <div class="header-btns">
+                <button onclick="window.location.href='/'">🏠</button>
+                <button onclick="window.location.href='/blog'">📝</button>
+            </div>
+        </header>
+        <div class="content-area">
+            <div class="ai-recommend-container">
+                <div class="ai-header">
+                    <h2>🤖 AI가 추천하는 가장 안전한 동네는?</h2>
+                    <p class="ai-subtitle">📍 실제 거주민 후기를 근거로 상세 분석</p>
+                </div>
+                
+                <div class="ai-description">
+                    <p>축적된 지역별 안전 정보와 <strong>실제 거주민 후기</strong>를 AI가 분석하여<br>
+                    가장 안전한 거주 지역을 추천하고 <strong>구체적인 이유</strong>를 설명해드립니다</p>
+                </div>
+                
+                <div class="ai-button-container">
+                    <button id="recommend-btn" class="ai-button">
+                        ✨ AI에게 추천받기
+                    </button>
+                </div>
+                
+                <!-- 로딩 상태 표시 -->
+                <div id="loading-area" class="loading-container" style="display: none;">
+                    <div class="loading-spinner"></div>
+                    <p>AI가 데이터를 분석하고 있습니다...</p>
+                </div>
+                
+                <!-- 결과 표시 영역 -->
+                <div id="result-area" class="result-container" style="display: none;">
+                    <div class="result-header">
+                        <h3>📊 AI 분석 결과 (거주민 후기 기반)</h3>
+                    </div>
+                    <div class="result-content">
+                        <div id="recommendation-text" class="recommendation-content"></div>
+                    </div>
+                </div>
+                
+                <!-- 에러 메시지 영역 -->
+                <div id="error-area" class="error-container" style="display: none;">
+                    <div class="error-message">
+                        <span>⚠️</span>
+                        <span id="error-message"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+       <nav>
+            <a href="/map">경찰서</a>
+            <a href="/map/search">길 찾기</a>
+            <a href="/blog">게시판</a>
+            <a href="/user/manage-emergency-contacts/">긴급연락처</a>
+            <a href="/user/mypage/">마이페이지</a>
+        </nav>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const recommendBtn = document.getElementById('recommend-btn');
+    const loadingArea = document.getElementById('loading-area');
+    const resultArea = document.getElementById('result-area');
+    const errorArea = document.getElementById('error-area');
+    const recommendationText = document.getElementById('recommendation-text');
+    const errorMessage = document.getElementById('error-message');
+    
+    recommendBtn.addEventListener('click', async function() {
+        // UI 상태 초기화
+        loadingArea.style.display = 'block';
+        resultArea.style.display = 'none';
+        errorArea.style.display = 'none';
+        recommendBtn.disabled = true;
+        recommendBtn.innerHTML = '🔄 분석 중...';
+        
+        try {
+            // API 호출
+            const response = await fetch('/gemini/api/', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // 성공 시 결과 표시
+                recommendationText.textContent = data.recommendation;
+                resultArea.style.display = 'block';
+            } else {
+                // 에러 발생 시
+                errorMessage.textContent = data.error || '추천을 받아오는 중 오류가 발생했습니다.';
+                errorArea.style.display = 'block';
+            }
+            
+        } catch (error) {
+            // 네트워크 에러 등
+            errorMessage.textContent = '네트워크 오류가 발생했습니다. 다시 시도해주세요.';
+            errorArea.style.display = 'block';
+        } finally {
+            // UI 상태 복원
+            loadingArea.style.display = 'none';
+            recommendBtn.disabled = false;
+            recommendBtn.innerHTML = '✨ AI에게 추천받기';
+        }
+    });
+});
+</script>
+
+</body>
+</html>

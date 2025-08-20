@@ -1,118 +1,180 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Posting</title>
+  <title>마이가드 - 글 상세보기</title>
+  <link rel="stylesheet" href="../../static/css/posting.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.6/dist/web/static/pretendard.css" />
+  <style>
+  </style>
 </head>
 
 <body>
-  <h2>{{post.postname}}</h2>
-  <b>작성자 닉네임 :</b> {{nickname}} <br>
-  <b>위치:</b> {{ post.location }}<br>
-  <b>거리 선택:</b> {{ post.distance }}<br>
-  <b>안전도:</b> {{ post.safety_level }}<br>
-  <p>{{post.contents}}</p>
-  <p>조회수: {{ post.view_count }}</p>
+  <div class="main-container">
+    <header>
+      <div class="header-left">
+        <div class="logo-icon">🛡️</div>
+        <div class="logo-text">마이가드</div>
+      </div>
+      <button class="home-btn" onclick="location.href='/'">🏠</button>
+    </header>
 
-  <!-- 사진 영역 -->
-  {% if post.mainphoto %}
-  <img src="{{post.mainphoto.url}}" alt="" width="300">
-  <br>
-  {% endif %}
+    <div class="content">
+      <h2>{{post.postname}}</h2>
 
-  <hr>
+      <div class="meta-info">
+        <div class="meta-row">
+          <span class="meta-label">작성자:</span>
+          <span class="meta-value">{{nickname}}</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">위치:</span>
+          <span class="meta-value">{{ post.location }}</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">거리:</span>
+          <span class="meta-value">{{ post.distance }}</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">안전도:</span>
+          <span class="safety-badge safety-high">{{ post.safety_level }}</span>
+        </div>
+      </div>
 
-  <!-- 좋아요 영역 -->
-  <form action="{% url 'main:like_post' post.pk %}" method="POST">
-    {% csrf_token %}
-    {% if user in post.like_users.all %}
-    <button type="submit">❤️ 좋아요 취소</button>
-    {% else %}
-    <button type="submit">🤍 좋아요</button>
-    {% endif %}
-    <span>{{ post.like_users.count }}명 좋아요</span>
-  </form>
-  <hr>
-  <br>
-  <a href="/blog/">목록</a>
-  <a href="/blog/{{post.pk}}/remove">삭제</a>
-  <hr>
+      <div class="content-text">
+        {{post.contents}}
+      </div>
 
+      <div class="view-count">
+        조회수: {{ post.view_count }}
+      </div>
 
-  <!-- 댓글 작성 폼 -->
-  {% if user.is_authenticated %}
-  <form action="{% url 'main:comments_create' post.pk %}" method="POST">
-    {% csrf_token %}
-    {{ comment_form }}
-    <input type="submit" value="댓글 작성">
-  </form>
-  {% else %}
-  <a href="/user/login/">[댓글을 작성하려면 로그인하세요.]</a>
-  {% endif %}
+      {% if post.mainphoto %}
+      <img src="{{post.mainphoto.url}}" alt="첨부 이미지" class="post-image">
+      {% endif %}
 
-  <hr>
-  <h3>댓글 목록</h3>
+      <hr>
 
-  <!-- 댓글 개수 표시 -->
-  {% if comments %}
-  <p><b>{{ comments|length }}개의 댓글이 있습니다.</b></p>
-  {% endif %}
-
-  <hr>
-  <!-- 댓글 좋아요 버튼 템플릿에 추가하기 -->
-  <ul>
-    {% for comment in comments %}
-    {% if not comment.parent %}
-    <li>
-      {{ comment.author.nickname }} - {{ comment.content }}
-      <small>(작성 시간: {{ comment.created_at|date:"Y년 m월 d일 H:i" }})</small>
-
-      <!-- 좋아요 버튼 -->
-      <form action="{% url 'main:like_comment' comment.pk %}" method="POST">
+      <form action="{% url 'main:like_post' post.pk %}" method="POST" class="like-section">
         {% csrf_token %}
-        {% if user in comment.like_users.all %}
-        <button type="submit">❤️</button>
+        {% if user in post.like_users.all %}
+        <button type="submit" class="like-btn liked">❤️ 좋아요 취소</button>
         {% else %}
-        <button type="submit">🤍</button>
+        <button type="submit" class="like-btn">🤍 좋아요</button>
         {% endif %}
-        {{ comment.like_users.count }}
+        <span class="like-count">{{ post.like_users.count }}명이 좋아요를 눌렀습니다</span>
       </form>
 
-      <!-- 대댓글 목록 -->
-      <ul>
-        {% for reply in comment.replies.all %}
-        <li>
-          ↳ {{ reply.author.nickname }} - {{ reply.content }}
-          <small>(작성 시간: {{ comment.created_at|date:"Y년 m월 d일 H:i" }})</small>
-          <!-- 대댓글 좋아요 -->
-          <form action="{% url 'main:like_comment' reply.pk %}" method="POST">
-            {% csrf_token %}
-            {% if user in reply.like_users.all %}
-            <button type="submit">❤️</button>
-            {% else %}
-            <button type="submit">🤍</button>
+      <hr>
+
+      <div class="action-links">
+        <a href="/blog/">목록</a>
+        <a href="/blog/{{post.pk}}/remove">삭제</a>
+      </div>
+
+      <hr>
+
+      {% if user.is_authenticated %}
+      <div class="comment-form">
+        <form action="{% url 'main:comments_create' post.pk %}" method="POST">
+          {% csrf_token %}
+          {{ comment_form }}
+          <input type="submit" value="댓글 작성" class="submit-btn">
+        </form>
+      </div>
+      {% else %}
+      <a href="/user/login/" class="login-link">[댓글을 작성하려면 로그인하세요.]</a>
+      {% endif %}
+
+      <div class="comments-section">
+        <h3>
+          댓글
+          {% if comments %}
+          <span class="comment-count">{{ comments|length }}</span>
+          {% endif %}
+        </h3>
+
+        <ul class="comments-list">
+          {% for comment in comments %}
+          {% if not comment.parent %}
+          <li class="comment-item">
+            <div class="comment-header">
+              <span class="comment-author">{{ comment.author.nickname }}</span>
+              <span class="comment-date">{{ comment.created_at|date:"Y년 m월 d일 H:i" }}</span>
+            </div>
+
+            <div class="comment-content">{{ comment.content }}</div>
+
+            <div class="comment-actions">
+              <form action="{% url 'main:like_comment' comment.pk %}" method="POST" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="comment-like-btn">
+                  {% if user in comment.like_users.all %}❤️{% else %}🤍{% endif %}
+                  {{ comment.like_users.count }}
+                </button>
+              </form>
+              <button type="button" class="reply-btn" onclick="toggleReplyForm({{ comment.pk }})">답글 작성</button>
+            </div>
+
+            {% if comment.replies.all %}
+            <ul class="replies-list">
+              {% for reply in comment.replies.all %}
+              <li class="reply-item">
+                <div class="comment-header">
+                  <span class="comment-author">
+                    <span class="reply-indicator">↳</span>{{ reply.author.nickname }}
+                  </span>
+                  <span class="comment-date">{{ reply.created_at|date:"Y년 m월 d일 H:i" }}</span>
+                </div>
+                <div class="comment-content">{{ reply.content }}</div>
+                <form action="{% url 'main:like_comment' reply.pk %}" method="POST" style="display: inline;">
+                  {% csrf_token %}
+                  <button type="submit" class="comment-like-btn">
+                    {% if user in reply.like_users.all %}❤️{% else %}🤍{% endif %}
+                    {{ reply.like_users.count }}
+                  </button>
+                </form>
+              </li>
+              {% endfor %}
+            </ul>
             {% endif %}
-            {{ reply.like_users.count }}
-          </form>
-        </li>
-        {% endfor %}
-      </ul>
 
-      <!-- 대댓글 작성 폼 -->
-      <form action="{% url 'main:comments_create' post.pk %}" method="POST">
-        {% csrf_token %}
-        <input type="hidden" name="parent_id" value="{{ comment.pk }}">
-        {{ comment_form }}
-        <button type="submit">답글 작성</button>
-      </form>
-    </li>
-    {% endif %}
-    {% endfor %}
-  </ul>
-  <!-- 댓글 좋아요 버튼 템플릿에 추가하기 코드 끝-->
+            <div class="reply-container" id="reply-container-{{ comment.pk }}">
+              <form id="reply-form-{{ comment.pk }}" action="{% url 'main:comments_create' post.pk %}" method="POST"
+                class="reply-form" style="display: none;">
+                {% csrf_token %}
+                <input type="hidden" name="parent_id" value="{{ comment.pk }}">
+                {{ comment_form }}
+                <button type="submit">답글 작성</button>
+              </form>
+            </div>
+          </li>
+          {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <nav>
+      <a href="/map">경찰서</a>
+      <a href="/map/search">길 찾기</a>
+      <a href="/blog">게시판</a>
+      <a href="/user/manage-emergency-contacts/">긴급연락처</a>
+      <a href="/user/mypage/">마이페이지</a>
+    </nav>
+  </div>
 
+  <script>
+    function toggleReplyForm(commentId) {
+      const form = document.getElementById(`reply-form-${commentId}`);
+      if (form.style.display === "none" || form.style.display === "") {
+        form.style.display = "block";
+      } else {
+        form.style.display = "none";
+      }
+    }
+  </script>
 </body>
 
 </html>

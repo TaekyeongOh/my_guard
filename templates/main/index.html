@@ -1,21 +1,267 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Title</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>마이가드 - 안전한 귀갓길 동행</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.6/dist/web/static/pretendard.css" />
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+
+    <script
+        src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2947f55a1ba70613c1e8c7124bf08ebd&libraries=clusterer&autoload=false"></script>
 </head>
+<style>
+    #sms-modal {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 2147483647;
+    }
+
+    #sms-modal:not(.hidden) {
+        display: flex !important;
+    }
+
+    #sms-modal .modal-backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, .45);
+    }
+
+    #sms-modal .modal-card {
+        position: relative;
+        z-index: 1;
+        max-width: 280px;
+        width: calc(100% - 2rem);
+        background: #fff;
+        border-radius: 1rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, .2);
+        padding: 1.25rem 1.25rem 1rem;
+    }
+
+    .sms-title {
+        color: #fff;
+        background: rgba(210, 224, 247, 0.95);
+        width: 250;
+        height: 150px;
+    }
+    #sms-modal.hidden {
+        display: none !important;
+    }
+
+    #sms-modal:not(.hidden) {
+        display: flex !important;
+    }
+    #sms-modal .modal-card {
+        padding: 0;
+        overflow: hidden;
+        border-radius: 16px;
+        border: 1px solid rgba(59, 130, 246, .12);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, .2);
+        background: #fff;
+        z-index: 1;
+    }
+    #sms-title,
+    .sms-title {
+        display: block;
+        margin: 0;
+        padding: 14px 16px 12px;
+        text-align: center;
+        font-size: 1.06rem;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        color: #fff;
+        background:
+            linear-gradient(180deg, rgba(59, 130, 246, .92) 0%, rgba(59, 130, 246, .78) 100%),
+            rgba(255, 255, 255, .05);
+        backdrop-filter: blur(6px);
+        border-bottom: 1px solid rgba(255, 255, 255, .25);
+        width: auto !important;
+        height: auto !important;
+    }
+    #sms-modal .modal-desc {
+        margin: 0;
+        padding: 12px 16px 8px;
+        text-align: center;
+        font-size: .92rem;
+        color: #4b5563;
+        background: #fff;
+    }
+
+    #sms-modal .modal-actions {
+        background: #fff;
+        padding: 10px 16px 14px;
+        display: grid;
+        gap: 8px;
+        grid-template-columns: 1fr 1fr !important;
+    }
+
+    #sms-modal .btn {
+        border: none;
+        border-radius: 12px;
+        padding: 12px 14px;
+        font-size: .95rem;
+        line-height: 1;
+        height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    #sms-modal .btn-secondary {
+        background: #f3f4f6;
+        color: #111827;
+    }
+
+    #sms-modal .btn-secondary:hover {
+        background: #e5e7eb;
+    }
+
+    #sms-modal .btn-primary {
+         background: #dc2626;
+        color: #fff;
+        box-shadow: 0 6px 14px rgba(59, 130, 246, .25);
+    }
+
+    #sms-modal .btn-primary:hover {
+        background: #2563eb;
+    }
+
+    #sms-modal .modal-backdrop {
+        background: rgba(0, 0, 0, .45) !important;
+        z-index: 0;
+    }
+    @media (min-width: 380px) {
+        #sms-modal .modal-actions {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+</style>
+
+
 <body>
-    main page
-    <br />
-    <a href="/blog">게시판</a>
-    <br />
-    <a href="/user/manage-emergency-contacts/">긴급 연락처 설정</a>
-    <br />
-    <a href="/user/mypage/">마이페이지</a>
-    <br />
-    <a href="/map/">map</a>
-    <br />
-    <a href="/map/search/">길찾기</a>
+    <div class="main-container">
+        <header class="header">
+            <div class="logo-box">
+                <div class="logo-icon">🛡️</div>
+                <div class="logo-text">마이가드</div>
+            </div>
+            <div class="status">📍 현재 위치 기반</div>
+            <div class="header-btns">
+                <button onclick="alert('🔔 알림 없음')">🔔</button>
+                <button onclick="window.location.href='/gemini/'">🤖</button>
+            </div>
+        </header>
+        <div id="map"></div>
+        <button id="emergency-button" onclick="toggleEmergencyMenu()">📞</button>
+
+        <div id="emergency-menu" class="emergency-menu hidden">
+            <button onclick="openSmsModal()">☎️ 긴급연락처</button>
+            <button onclick="openPoliceHint()">🚓 112 신고</button>
+        </div>
+
+        <nav>
+            <a href="/map">경찰서</a>
+            <a href="/map/search">길 찾기</a>
+            <a href="/blog">게시판</a>
+            <a href="/user/manage-emergency-contacts/">긴급연락처</a>
+            <a href="/user/mypage/">마이페이지</a>
+        </nav>
+    </div>
+    <div id="sms-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="sms-title">
+        <div class="modal-backdrop" onclick="closeSmsModal()"></div>
+        <div class="modal-card">
+            <h2 id="sms-title">긴급연락처에게 문자를 보냅니다</h2>
+            <p class="modal-desc">전화로 연결할까요?</p>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeSmsModal()">닫기</button>
+                <button class="btn btn-primary" onclick="callEmergency()">연결</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function initKakaoMap() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => createMap(new kakao.maps.LatLng(pos.coords.latitude, pos.coords.longitude)),
+                    () => createMap(new kakao.maps.LatLng(37.5665, 126.9780))
+                );
+            } else {
+                createMap(new kakao.maps.LatLng(37.5665, 126.9780));
+            }
+        }
+        function createMap(centerLatLng) {
+            const map = new kakao.maps.Map(document.getElementById('map'), { center: centerLatLng, level: 5 });
+            new kakao.maps.Marker({ position: centerLatLng, map });
+        }
+        function safeLoadKakao() {
+            if (window.kakao && kakao.maps && typeof kakao.maps.load === 'function') {
+                kakao.maps.load(initKakaoMap);
+            } else {
+                console.warn('Kakao SDK not loaded yet; will retry on window load');
+                window.addEventListener('load', () => {
+                    if (window.kakao && kakao.maps && typeof kakao.maps.load === 'function') {
+                        kakao.maps.load(initKakaoMap);
+                    } else {
+                        console.warn('Kakao SDK still not available. Skipping map init.');
+                    }
+                });
+            }
+        }
+        safeLoadKakao();
+        let isMenuOpen = false;
+
+        function toggleEmergencyMenu() {
+            const menu = document.getElementById('emergency-menu');
+            isMenuOpen = !isMenuOpen;
+            menu.classList.toggle('hidden', !isMenuOpen);
+        }
+
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('emergency-menu');
+            const btn = document.getElementById('emergency-button');
+            const modal = document.getElementById('sms-modal');
+            const modalOpen = !modal.classList.contains('hidden');
+            if (!modalOpen && !menu.contains(e.target) && !btn.contains(e.target)) {
+                menu.classList.add('hidden'); isMenuOpen = false;
+            }
+        });
+
+        function openSmsModal() {
+            document.getElementById('emergency-menu').classList.add('hidden');
+            isMenuOpen = false;
+
+            const modal = document.getElementById('sms-modal');
+            modal.classList.remove('hidden');     
+            document.body.style.overflow = 'hidden';
+        }
+        function closeSmsModal() {
+            const modal = document.getElementById('sms-modal');
+            modal.classList.add('hidden');
+            modal.style.removeProperty('display'); 
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSmsModal(); });
+
+        function openPoliceHint() {
+            alert('112 신고 메뉴입니다.');
+            document.getElementById('emergency-menu').classList.add('hidden');
+            isMenuOpen = false;
+        }
+        window.openSmsModal = openSmsModal;
+        window.closeSmsModal = closeSmsModal;
+    </script>
+
+
 </body>
+
 </html>

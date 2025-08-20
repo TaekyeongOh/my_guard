@@ -27,6 +27,12 @@ class Post(models.Model):
     ]
     safety_level = models.CharField(max_length=10, choices=SAFETY_CHOICES, default='medium')
 
+    SAFETY_LEVEL_ORDER = {
+        'high': 3,
+        'medium': 2,
+        'low': 1,
+    }
+
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     like_users = models.ManyToManyField(CustomUser, related_name='liked_posts', blank=True)

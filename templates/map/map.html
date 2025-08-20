@@ -1,32 +1,71 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title>마커 클러스터러 - 현재 위치 기반</title>
+<html lang="ko">
 
-    <!-- jQuery 로드 -->
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>마이가드 - 경찰서</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.6/dist/web/static/pretendard.css" />
+    <link rel="stylesheet" href="../../static/css/map.css">
+    <!-- jQuery (원본과 동일) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
 
     <style>
-        #map { width: 100%; height: 500px; }
-        p.link { margin-top: -12px; }
+
     </style>
 </head>
-<body>
-    <div id="map"></div>
 
+<body>
+    <div class="main-container">
+        <!-- ✅ 헤더 -->
+        <header class="header">
+            <div class="logo-box">
+                <div class="logo-icon">🛡️</div>
+                <div class="logo-text">마이가드</div>
+            </div>
+            <button class="home-btn" onclick="location.href='/'">🏠</button>
+        </header>
+
+        <!-- ✅ 지도 섹션 -->
+        <div class="map-container">
+            <div class="map-header">
+                <h2>📍 주변 경찰서 위치</h2>
+                <p class="map-description">현재 위치 기반으로 가까운 경찰서를 찾아드립니다</p>
+            </div>
+
+            <div id="map"></div>
+
+            <div class="map-info">
+                <p>
+                    💡 지도의 마커를 클릭하면 경찰서 이름을 확인할 수 있습니다.<br />
+                    🔍 지도를 확대/축소하여 더 자세히 살펴보세요.
+                </p>
+            </div>
+        </div>
+
+        <nav>
+            <a href="/map">경찰서</a>
+            <a href="/map/search">길 찾기</a>
+            <a href="/blog">게시판</a>
+            <a href="/user/manage-emergency-contacts/">긴급연락처</a>
+            <a href="/user/mypage/">마이페이지</a>
+        </nav>
+    </div>
+
+    <!-- Kakao 지도 API (원본과 동일: clusterer 포함) -->
     <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{kakao_maps_app_key}}&libraries=clusterer"></script>
 
     <script>
+        // 원본과 동일한 전역 변수
         let map;
         let clusterer;
 
+        // ✅ 현재 위치로 지도 초기화(원본 로직 그대로)
         function initMapWithCurrentLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(position => {
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
-                    
                     createMap(new kakao.maps.LatLng(lat, lng));
                 }, error => {
                     console.warn("현재 위치를 가져올 수 없어 기본 위치로 지도 초기화");
@@ -37,6 +76,7 @@
             }
         }
 
+        // ✅ 지도/클러스터러 생성(원본 로직 그대로)
         function createMap(centerLatLng) {
             map = new kakao.maps.Map(document.getElementById('map'), {
                 center: centerLatLng,
@@ -46,18 +86,19 @@
             clusterer = new kakao.maps.MarkerClusterer({
                 map: map,
                 averageCenter: true,
-                minLevel: 10,
+                minLevel: 10
             });
 
             loadMarkers();
         }
 
-        // JSON에서 마커 불러오기 및 마커와 infoWindow 연결
+        // ✅ JSON에서 마커 로드 + 인포윈도우 연결(원본 로직 그대로)
         function loadMarkers() {
             $.get('/static/map/police_positions.json', function (data) {
                 const markers = [];
 
-                data.positions.forEach(pos => {
+                // data.positions 배열 기준(원본과 동일)
+                (data.positions || []).forEach(pos => {
                     const marker = new kakao.maps.Marker({
                         position: new kakao.maps.LatLng(pos.lat, pos.lng)
                     });
@@ -77,10 +118,11 @@
             });
         }
 
-        // 페이지 로딩 시 실행
+        // ✅ 페이지 로드 시 실행(원본과 동일)
         window.onload = function () {
             initMapWithCurrentLocation();
         };
     </script>
 </body>
+
 </html>
