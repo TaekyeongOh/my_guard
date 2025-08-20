@@ -10,8 +10,6 @@
     <link rel="stylesheet" href="{% static 'css/new_post.css' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.6/dist/web/static/pretendard.css" />
 </head>
-
-
 <body>
     <div class="main-container">
         <header>
@@ -21,38 +19,38 @@
             </div>
             <button class="home-btn" onclick="location.href='/'">🏠</button>
         </header>
+        <div class="scroll">
+            <form id="post-form" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label for="postname">제목</label>
+                <input type="text" id="postname" name="postname" placeholder="제목은 위치로 자동입력됩니다." readonly required>
+                <div class="nickname">✏️ 작성자 닉네임: <strong>{{ nickname }}</strong></div>
+                <label for="location">지역 위치</label>
+                <button type="button" onclick="execDaumPostcode()">주소 검색</button>
+                <input type="text" id="location" name="location" placeholder="예: 서울시 강남구 삼성동" required>
+                <label for="distance">거리</label>
+                <select id="distance" name="distance">
+                    <option value="10m">10m</option>
+                    <option value="50m">50m</option>
+                    <option value="100m">100m</option>
+                </select>
+                <label for="safety_level">안전도</label>
+                <select id="safety_level" name="safety_level">
+                    <option value="high">상</option>
+                    <option value="medium">중</option>
+                    <option value="low">하</option>
+                </select>
 
-        <form id="post-form" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <label for="postname">제목</label>
-            <input type="text" id="postname" name="postname" placeholder="제목은 위치로 자동입력됩니다." readonly required>
-            <div class="nickname">✏️ 작성자 닉네임: <strong>{{ nickname }}</strong></div>
-            <label for="location">지역 위치</label>
-            <button type="button" onclick="execDaumPostcode()">주소 검색</button>
-            <input type="text" id="location" name="location" placeholder="예: 서울시 강남구 삼성동" required>
-            <label for="distance">거리</label>
-            <select id="distance" name="distance">
-                <option value="10m">10m</option>
-                <option value="50m">50m</option>
-                <option value="100m">100m</option>
-            </select>
-            <label for="safety_level">안전도</label>
-            <select id="safety_level" name="safety_level">
-                <option value="high">상</option>
-                <option value="medium">중</option>
-                <option value="low">하</option>
-            </select>
+                <label for="contents">내용</label>
+                <textarea id="contents" name="contents" placeholder="내용을 입력하세요..."></textarea>
 
-            <label for="contents">내용</label>
-            <textarea id="contents" name="contents" placeholder="내용을 입력하세요..."></textarea>
+                <label for="mainphoto">사진 첨부</label>
+                <input type="file" name="mainphoto" id="mainphoto">
+                
+                <button type="submit" class="submit-btn">글쓰기 완료</button>
+            </form>
 
-            <label for="mainphoto">사진 첨부</label>
-            <input type="file" name="mainphoto" id="mainphoto">
-            <button type="submit" class="submit-btn">글쓰기 완료</button>
-        </form>
-
-        <button type="submit" form="post-form" class="submit-btn">글쓰기 완료</button>
-
+            </div>
         <nav>
             <a href="/map">경찰서</a>
             <a href="/map/search">길 찾기</a>
