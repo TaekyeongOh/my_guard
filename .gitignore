@@ -1,4 +1,6 @@
 venv
 .pyc
 secrets.json
+secrets_example.json
 db.sqlite3
+.cursor
